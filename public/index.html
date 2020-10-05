@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonathan W Liusri</title>
+
+    <!-- Vue.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="app" class="container">
+        <component-project
+            v-for="project in projects"
+            v-bind:key="project.id"
+            :project="project"
+        ></component-project>
+    </div>
+
+
+    <script type="text/x-template" id="component-project-template">
+        <div class="proj-container row my-2">
+            <div class="img-carousel col-12 col-sm-7">
+                <div class="img-slider">
+                    <div v-for="(image,index) in project.images" class="img-slide">
+                        <img :src="image" alt="">
+                        <div class="numbertext">{{index+1}} / {{project.images.length}}</div>
+                    </div>
+                </div>                
+            </div>
+            <div class="proj-body col-12 col-sm-5">
+                <h3 class="proj-title">
+                    {{project.title}}
+                </h3>
+                <p class="proj-desc">
+                    {{project.content}}
+                </p>
+                <div class="proj-tags">
+                    <span v-for="tag in project.tags" class="badge badge-secondary mx-1">{{tag}}</span>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script src="/__/firebase/7.15.4/firebase-app.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script>
+        var db = firebase.firestore();
+
+        Vue.component('component-project',{
+            template: '#component-project-template',
+            props:['project'],
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                projects: []
+            },
+            methods:{
+                fetchProjects: function () {
+                    db.collection("projects").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            var $data = doc.data();
+                            $data.id = doc.id;
+                            this.projects.push($data);
+                        });
+                    }).catch(function(error) {
+                        console.log("Error getting documents: ", error);
+                    });;
+                }
+            },
+            mounted() {
+                this.fetchProjects();
+            }
+        })
+
+    </script>
+</body>
+</html>

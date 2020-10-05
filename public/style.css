@@ -1,0 +1,64 @@
+.proj-container{
+    background: #f8f8f8;
+    border-radius: 25px;
+}
+.proj-container .img-carousel {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.proj-container .img-carousel .img-slider{
+    height: 420px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+.proj-container .img-slider .img-slide{
+    margin-right: 15px;
+    flex-shrink: 0;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    scroll-snap-align: start;
+}
+.proj-container .img-slider .img-slide img{
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: contain;
+}
+.numbertext {
+    color: #5a5a5a;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+    width: 50px;
+}
+.proj-container .proj-body{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+.proj-container .proj-body .proj-desc{
+    font-size: 0.9rem;
+}
+
+.proj-container .proj-body .proj-tags{
+    display: flex;
+    justify-content: center;
+}
+
+
+/* Phone - Tablet Portrait */
+@media screen and (max-width: 768px) {
+    .proj-container .img-carousel .img-slider{
+        height: 280px;
+    }
+}
