@@ -3,30 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jonathan W Liusri</title>
+    <title>Jonathan W Liusri Portfolio</title>
 
     <!-- Vue.JS -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/836b3793b1.js" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     
-    <div id="app" class="container">
-        <component-project
-            v-for="project in projects"
-            v-bind:key="project.id"
-            :project="project"
-        ></component-project>
+    <div id="app">
+
+        <!-- Greeting Section -->
+        <div class="greeting-wrapper">
+            <div class="container">
+                <div class="row pt-5">
+                    <div class="col-md-8">
+                        <h1 class="greeting-title py-2" v-html="profile.greetingTitle"></h1>
+                        <p class="greeting-text py-1" v-html="profile.greetingText"></p>
+                        <div class="social-media-wrapper">
+                            <a v-for="social in profile.social" :href="social.href" target="_blank" class="icon-button">
+                                <i :class="social.icon" v-bind:style="{backgroundColor: social.color}"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 px-5 px-md-0 d-flex align-items-end">
+                        <img :src="profile.picture" style="max-width: 100%;margin-top: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Greeting Section End-->
+        <!-- Projects Section -->
+        <div class="container mt-5">
+            <h1 style="font-weight: 400;">Projects</h1>
+
+            <!-- Main Projects -->
+            <component-project
+                v-for="project in projects"
+                v-bind:key="project.id"
+                :project="project"
+            ></component-project>
+
+            <!-- Gallery Projects -->
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4">
+                <component-gallery-card
+                    v-for="project in gallery"
+                    v-bind:key="project.id"
+                    :project="project"
+                ></component-gallery-card>
+            </div>
+            
+        </div>
+        <!-- Projects Section End-->
+        <p class="footer-text">
+            Made with 
+            <img alt="❤️" draggable="false" src="https://twemoji.maxcdn.com/2/72x72/2764.png" style="height: 1em; width: 1em; margin: 0px 0.05em 0px 0.1em; vertical-align: -0.1em;"> 
+            by Jonathan W. Liusri
+            <br>
+            Check this page <a href="https://github.com/jwliusri/web-portfolio">Source Code</a>
+        </p>
     </div>
 
-
+    <!-- Vue Component Template for Main Project -->
     <script type="text/x-template" id="component-project-template">
-        <div class="proj-container row my-2">
-            <div class="img-carousel col-12 col-sm-7">
+        <div class="proj-container row my-4">
+            <div class="img-carousel col-12 col-md-7">
                 <div class="img-slider">
                     <div v-for="(image,index) in project.images" class="img-slide">
                         <img :src="image" alt="">
@@ -34,18 +82,33 @@
                     </div>
                 </div>                
             </div>
-            <div class="proj-body col-12 col-sm-5">
+            <div class="proj-body col-12 col-md-5">
                 <h3 class="proj-title">
                     {{project.title}}
                 </h3>
-                <p class="proj-desc">
-                    {{project.content}}
-                </p>
+                <p class="proj-desc" v-html="project.content"></p>
                 <div class="proj-tags">
-                    <span v-for="tag in project.tags" class="badge badge-secondary mx-1">{{tag}}</span>
+                    <span v-for="tag in project.tags" class="badge badge-custom mx-1">{{tag}}</span>
                 </div>
             </div>
         </div>
+    </script>
+
+    <!-- Vue Component Template for Gallery Project -->
+    <script type="text/x-template" id="component-gallery-card-template">
+        <div class="col mb-4">
+            <div class="card">
+                <img :src="project.image" class="card-img-top" alt="img">
+                <div class="card-body">
+                    <h6 class="card-title">{{project.title}}</h6>
+                    <p class="card-text" v-html="project.content"></p>
+                    <div class="proj-tags">
+                        <span v-for="tag in project.tags" class="badge badge-custom mx-1">{{tag}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </script>
 
     <script src="/__/firebase/7.15.4/firebase-app.js"></script>
@@ -59,14 +122,21 @@
             props:['project'],
         })
 
+        Vue.component('component-gallery-card',{
+            template: '#component-gallery-card-template',
+            props:['project'],
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                projects: []
+                profile: [],
+                projects: [],
+                gallery: []
             },
             methods:{
                 fetchProjects: function () {
-                    db.collection("projects").get().then((querySnapshot) => {
+                    db.collection("projects").where("type", "==", "main").orderBy("index", "desc").get().then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             var $data = doc.data();
                             $data.id = doc.id;
@@ -75,9 +145,25 @@
                     }).catch(function(error) {
                         console.log("Error getting documents: ", error);
                     });;
+
+                    db.collection("projects").where("type", "==", "gallery").orderBy("index", "desc").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            var $data = doc.data();
+                            $data.id = doc.id;
+                            this.gallery.push($data);
+                        });
+                    }).catch(function(error) {
+                        console.log("Error getting documents: ", error);
+                    });;
+                },
+                fetchProfile: function () {
+                    db.collection("info").doc("profile").get().then((querySnapshot) => {
+                        this.profile = querySnapshot.data();
+                    })
                 }
             },
             mounted() {
+                this.fetchProfile();
                 this.fetchProjects();
             }
         })

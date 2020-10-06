@@ -1,6 +1,76 @@
+body{
+    font-family: Montserrat, "Montserrat", sans-serif;
+}
+
+.greeting-wrapper{
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 60%, rgba(237,237,237,1) 100%);
+}
+
+
+.greeting-title{
+    font-size: 60px;
+}
+
+.greeting-text{
+    font-size: 30px;
+    color: #868e96;
+    line-height: 30px;
+}
+@media screen and (max-width: 1380px) {
+    .greeting-title{
+        font-size: 50px;
+    }
+    
+    .greeting-text{
+        font-size: 20px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .greeting-wrapper{
+        background: linear-gradient(to top,  rgba(237,237,237,1) 0%, rgba(246,246,246,1) 20%, rgba(255,255,255,1) 100%);
+    }
+    .greeting-title{
+        font-size: 30px;
+    }
+    
+    .greeting-text{
+        font-size: 16px;
+        line-height: 1.1rem;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .card-text{
+        font-size: 12px;
+    }
+}
+
+.footer-text{
+    text-align: center;
+    color: #868e96;
+}
+
+.icon-button i{
+    color: #fff;
+    border-radius: 2.6rem;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.3rem;
+    height: 2.6rem;
+    line-height: 2.6rem;
+    position: relative;
+    text-align: center;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 2.6rem;
+    margin: 0 5px 10px;
+}
+
 .proj-container{
-    background: #f8f8f8;
-    border-radius: 25px;
+    box-shadow: 0 10px 30px -15px rgba(0,0,0,.2);
+    border-radius: 10px;
+    border: 1px solid hsla(0,0%,82.7%,.397);
 }
 .proj-container .img-carousel {
     padding-top: 15px;
@@ -31,6 +101,7 @@
     height: auto;
     border-radius: 8px;
     object-fit: contain;
+    -webkit-user-drag: none;
 }
 .numbertext {
     color: #5a5a5a;
@@ -38,7 +109,7 @@
     padding: 8px 12px;
     position: absolute;
     top: 0;
-    width: 50px;
+    width: 5rem;
 }
 .proj-container .proj-body{
     padding-top: 15px;
@@ -55,6 +126,11 @@
     justify-content: center;
 }
 
+
+.badge-custom{
+    color: #fff;
+    background-color: #50AFC0;
+}
 
 /* Phone - Tablet Portrait */
 @media screen and (max-width: 768px) {
